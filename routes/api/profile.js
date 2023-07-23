@@ -47,11 +47,11 @@ if(!errors.isEmpty()){
     profileFields.user = req.user.id;
     if(name) profileFields.name = name;
     if (bio) profileFields.bio = bio;
+    if(avatar) profileFields.avatar = avatar
+    else profileFields.avatar = `https://avatars.dicebear.com/api/bottts/${req.user.id}.svg`;
 
     const user = await User.findById(req.user.id).select('-password');
     
-    profileFields.avatar = `https://avatars.dicebear.com/api/bottts/${user._id}.svg`;
-  
     try{
       let profile =await Profile.findOne({user : req.user.id})
 

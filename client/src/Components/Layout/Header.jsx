@@ -12,7 +12,8 @@ import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Spinner from '../../Components/Layout/Spinner'
 import {Link} from 'react-router-dom'
-import {logout, reset} from '../../features/auth/authSlice'
+import {logout, reset as authReset} from '../../features/auth/authSlice'
+import {reset as profileReset} from '../../features/profile/profileSlice'
 import { useSelector, useDispatch} from 'react-redux/';
 import {useNavigate} from 'react-router-dom'
 
@@ -26,12 +27,14 @@ export default function ButtonAppBar() {
     if(isError){
       message.forEach(error => toast.error(error.msg));
     }
-    dispatch(reset())
-  }, [isError,isSuccess,isAuthenticated,user,navigate,dispatch])
+    dispatch(authReset())
+  }, [isError,isLoading,isSuccess,isAuthenticated,user,navigate,dispatch])
   
 
   const onClick =() =>{
     dispatch(logout())
+    dispatch(authReset())
+    dispatch(profileReset())
     navigate('/')
   }
 
@@ -49,7 +52,7 @@ export default function ButtonAppBar() {
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link to='/'>
-            ImageGallery
+            Snap
             </Link>
           </Typography>
           <Button color="inherit"> <Link to='/login'>Login</Link> </Button>
@@ -69,17 +72,22 @@ export default function ButtonAppBar() {
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link to='/'>
-            ImageGallery
+            Snapstash
             </Link>
           </Typography>
+
+          <Button color="inherit"> <Link to='/feed'>Feed</Link> </Button>
+          <Button color="inherit"> <Link to='/dashboard'>Profile</Link> </Button>
+          <Button color="inherit"> <Link to='/album/:id'>My Album</Link> </Button>
           <Button color="inherit"> <Link onClick={onClick}>Logout</Link> </Button>
           
-        </Toolbar>
+    </Toolbar>
   );
 
   return (
+    isLoading ? <Spinner/> :
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar  sx={{backgroundColor: "purple"}} position="static">
+      <AppBar  sx={{backgroundColor: "#BA704F"}} position="static">
        <span></span> {user ? authLinks : guestLinks }
       </AppBar>
     </Box>

@@ -42,6 +42,8 @@
     //load user
     const getUser = async() =>{
       const res = await axios.get('http://localhost:5000/api/auth')
+      const token = localStorage.getItem('token')
+      res.data = {...res.data, token}
       return res.data;
     }
 

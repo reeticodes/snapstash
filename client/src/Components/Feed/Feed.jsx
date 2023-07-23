@@ -1,73 +1,29 @@
-import { useState } from 'react'
-import avatar from '../../assets/logo.png'
-import axios from 'axios'
+import {useState} from 'react'
+import Posts from '../Posts/Posts'
+import PostForm from '../Posts/PostForm'
+
+import {Container,Box, Modal,Button,Stack, Card,CardMedia, CardContent, Typography,CardActions} from '@mui/material'
 
 
-const url = "http://localhost:5000/uploads"
 
-function App() {
-   
-  const [postImage, setPostImage] = useState( { myfile : ""})
+function Feed() {
 
-  const createPost = async (newImage) => {
-    try{
-      await axios.post(url, newImage)
-    }catch(error){
-      console.log(error)
-    }
-  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    createPost(postImage)
-    console.log("Uploaded")
-  }
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  
 
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    const base64 = await convertToBase64(file);
-    console.log(base64)
-    setPostImage({ ...postImage, myfile : base64 })
-  }
- 
   return (
-    <div className="App">
-    <form onSubmit={handleSubmit}>
-
-    <label htmlFor="file-upload" className='custom-file-upload'>
-          <img style={{width:'200px', height:'200px'}} src={postImage.myfile || avatar} alt="" />
-        </label>
-
-      <input 
-        type="file"
-        lable="Image"
-        name="myfile"
-        id='file-upload'
-        accept='.jpeg, .png, .jpg'
-        onChange={(e) => handleFileUpload(e)}
-       />
-
-       <h3>Doris Wilder</h3>
-       <span>Designer</span>
-
-       <button type='submit'>Submit</button>
-    </form>
-  </div>
+    <div>
+      <Container maxWidth="sm" style={{marginTop:'5%'}}>
+        <Box>
+        <Button onClick={handleOpen}>Upload photo</Button>
+        </Box>
+        <PostForm open={open} setOpen={setOpen}/>
+        <Posts/>
+      </Container>
+    </div>
   )
 }
 
-export default App
-
-
-function convertToBase64(file){
-  return new Promise((resolve, reject) => {
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onload = () => {
-      resolve(fileReader.result)
-    };
-    fileReader.onerror = (error) => {
-      reject(error)
-    }
-  })
-}
+export default Feed
