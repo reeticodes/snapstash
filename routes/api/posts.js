@@ -12,7 +12,8 @@ const { route } = require('./auth');
 //@desc Create a post 
 //@access Private
 router.post('/',[auth,[
-  check('myfile','file is required').not().isEmpty()
+  check('myfile','file is required').not().isEmpty(),
+  check('caption').not().isEmpty().isLength({min:1, max:100})
 ]], async(req,res) => {
   const errors = validationResult(req);
   if(!errors.isEmpty()){
@@ -36,6 +37,7 @@ router.post('/',[auth,[
 
     const newPost = new Posts({
       myfile: req.body.myfile,
+      caption : req.body.caption,
       keywords: req.body.keywords,
       name : profile.name,
       avatar: profile.avatar,

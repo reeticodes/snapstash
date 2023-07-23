@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import {useState,Fragment, useEffect} from 'react';
+
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +13,15 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {toast, ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import Spinner from '../../Components/Layout/Spinner'
+
+
+
+import {useSelector, useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+import {register,loadUser, reset} from '../../features/auth/authSlice'
 
 function Copyright(props) {
   return (
@@ -32,6 +42,28 @@ const defaultTheme = createTheme();
 
 export default function Register() {
 
+  const {user,isError, isLoading, isSuccess, message} = useSelector(
+    (state) => state.auth
+  )
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+ 
+
+  useEffect(() => {
+    if(isError){
+
+      message.forEach(error => toast.error(error.msg));
+    }
+    if(isSuccess || user) {
+      dispatch(loadUser())
+       navigate('/')
+    }
+    dispatch(reset())
+  
+  }, [user, message, isError, isSuccess, navigate, dispatch])
+  
+
   const [formData, setformData] = useState({
     email : '',
     password : '',
@@ -39,15 +71,6 @@ export default function Register() {
   })
 
   const {email, password, password2} = formData;
-  
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
 
   const onChange = (e) => {
     setformData((prevState)=>({
@@ -55,9 +78,31 @@ export default function Register() {
       [e.target.name] : e.target.value
     }))
   }
+ 
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    
+    if(password !== password2){
+  
+      toast.error('Passwords do not match')
+    }
+    else{
+      const userData = {
+        email, password
+      }
+      dispatch(register(userData))
+    }
+  };
+
+ 
+  
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <>
+     <ThemeProvider theme={defaultTheme}>
+   
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -131,7 +176,11 @@ export default function Register() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />
+        <ToastContainer/>
       </Container>
+
     </ThemeProvider>
+    
+    </>
   );
 }

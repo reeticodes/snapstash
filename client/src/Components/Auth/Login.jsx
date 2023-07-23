@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,Fragment, useEffect} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {toast, ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import Spinner from '../../Components/Layout/Spinner'
+
+
+
+import {useSelector, useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+import {login,loadUser, reset} from '../../features/auth/authSlice'
+
+
 
 function Copyright(props) {
   return (
@@ -30,14 +41,37 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
+
+
+
 export default function Login() {
+
+  const {user,isError,authToken, isLoading,isAuthenticated, isSuccess, message} = useSelector(
+    (state) => state.auth
+  )
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if(isError){
+      
+      message.forEach(error => toast.error(error.msg));
+  
+    }
+    if(isSuccess || user) {
+      dispatch(loadUser())
+       navigate('/feed')
+    }
+    dispatch(reset())
+  
+  }, [user,authToken, message,isAuthenticated, isError, isSuccess, navigate, dispatch])
+  
 
   const [formData, setformData] = useState({
     email : '',
     password : ''
   })
 
-  const {email, password} = formData;
 
   const onChange = (e) => {
     setformData((prevState)=>({
@@ -50,12 +84,12 @@ export default function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    dispatch(login(formData))
   };
+
+  if (isAuthenticated) {
+		navigate('/feed')
+	}
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -85,6 +119,7 @@ export default function Login() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange = {onChange}
             />
             <TextField
               margin="normal"
@@ -95,6 +130,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange = {onChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -123,6 +159,7 @@ export default function Login() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+        <ToastContainer/>
       </Container>
     </ThemeProvider>
   );
