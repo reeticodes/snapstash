@@ -15,10 +15,11 @@ import Header from './Components/Layout/Header'
 import Dashboard from './Components/Profile/Dashboard'
 import Login from './Components/Auth/Login'
 import Register from './Components/Auth/Register'
-import Feed from './Components/Feed/Feed'
+import Posts from './Components/Posts/Posts'
 import CreateProfile from './Components/Profile/CreateProfile'
 import Profile from './Components/Profile/Profile'
 import Homepage from './Components/Layout/Homepage'
+import Album from './Components/Albums/Album'
 function App() {
 
   if (localStorage.user) {
@@ -47,8 +48,9 @@ function App() {
             <Route path='/' element = {<Homepage/>}/>
 
             <Route element={<PrivateRoutes />}>
-              <Route path='/feed' element={<Feed/>} />
+              <Route path='/feed' element={<Posts/>} />
               <Route path='/profile/:id' element = {<Profile/>}/>
+              <Route path='/album/:id' element = {<Album/>}/>
             </Route>
             
           </Routes>

@@ -118,7 +118,7 @@ router.get('/',auth, async(req,res)=>{
   }
 });
 
-//@route  GET api/posts
+//@route  GET api/posts/user/:id
 //@desc   Get user posts 
 //@access Private
 router.get('/user/:id', auth, async(req,res)=>{
@@ -126,6 +126,21 @@ router.get('/user/:id', auth, async(req,res)=>{
     console.log(req.params)
     const posts = await Posts.find(
       {user: req.params.id}
+    )
+    res.json(posts)
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error')
+  }
+})
+
+//@route  GET api/posts/album/:id
+//@desc   Get album posts 
+//@access Private
+router.get('/album/:id', auth, async(req,res)=>{
+  try {
+    const posts = await Posts.find(
+      {album: req.params.id}
     )
     res.json(posts)
   } catch (err) {

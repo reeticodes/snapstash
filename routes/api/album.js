@@ -48,7 +48,7 @@ router.post('/',[auth,[
 //@route  GET api/albums
 //@desc   Get all albums 
 //@access Private
-router.get('/',async(req,res)=>{
+router.get('/',auth,async(req,res)=>{
     try {
       const albums = await Album.find()
       res.json(albums)
@@ -57,11 +57,25 @@ router.get('/',async(req,res)=>{
       res.status(500).send('Server error')
     }
   });
+  
+//@route  GET api/albums/user
+//@desc   Get user albums 
+//@access Private
+router.get('/user',auth,async(req,res)=>{
+  try {
+  
+    const albums = await Album.find({user : req.user.id})
+    res.json(albums)
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error')
+  }
+});
 
   //@route  GET api/albums/name
 //@desc   Get album by name 
 //@access Private
-router.get('/name',async(req,res)=>{
+router.get('/name',auth,async(req,res)=>{
   try {
     let name = req.body.name;
     const album = await Album.findOne({name: name})
@@ -75,7 +89,7 @@ router.get('/name',async(req,res)=>{
 //@route  GET api/albums/:id
 //@desc   Get albums by id
 //@access Private
-router.get('/albumId/:id', async (req, res) => {
+router.get('/:id',auth, async (req, res) => {
     try {
       const album = await Album.findById(req.params.id)
       //.sort({ date: -1 });

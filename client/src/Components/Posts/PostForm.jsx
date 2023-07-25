@@ -53,7 +53,7 @@ function PostForm({open, setOpen}) {
     }
     if(isSuccess) toast.success('Posted')
  
-   }, [message, isSuccess,isLoading, isError])
+   }, [message,createPost, isSuccess,isLoading, isError])
 
 
   const handleClose = () => setOpen(false)
@@ -61,9 +61,11 @@ function PostForm({open, setOpen}) {
 
 
   const handleSubmit = () =>{
-    console.log(`my caption is ${caption}`)
     formData.append("myfile", myfile)
     formData.append("caption", caption)
+    formData.append("keywords", tags)
+
+    console.log(tags)
     
     dispatch(createPost(formData))
     handleClose()
@@ -104,11 +106,9 @@ function PostForm({open, setOpen}) {
             </label>
   
     <Input name="caption" value={caption} type="text" onChange={(e)=>{ 
-      console.log(caption)
       setCaption(e.target.value)
-      console.log(caption)
-    }
-      } ></Input>
+    }}/>
+
     <TagInput tags={tags} setTags={setTags} />
     <Button onClick={handleSubmit} >Post</Button>
   </div>

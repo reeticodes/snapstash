@@ -52,6 +52,17 @@ export const getUserPosts = createAsyncThunk('/posts/user', async(userId,thunkAP
         return thunkAPI.rejectWithValue(message)
     }
 })
+//get album posts
+export const getAlbumPosts = createAsyncThunk('/posts/album', async(albumId,thunkAPI)=>{
+    try {
+        const res = await postService.getAlbumPosts(albumId)
+        return res;
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 //delete post
 export const deletePost = createAsyncThunk('/post/delete', async(postId,thunkAPI)=>{
     try {
@@ -175,6 +186,21 @@ export const postSlice = createSlice({
             state.isLoading = false;
         })
         .addCase(getUserPosts.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload
+            state.posts = []
+        })
+
+
+        .addCase(getAlbumPosts.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(getAlbumPosts.fulfilled,(state,action)=>{
+            state.posts = action.payload,
+            state.isLoading = false;
+        })
+        .addCase(getAlbumPosts.rejected, (state,action)=>{
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload

@@ -14,7 +14,6 @@ export default function TagInput({tags,setTags}) {
         setTags([...tags, e.target.value]);
         e.target.value = "";
       }
-   
     }
   };
 

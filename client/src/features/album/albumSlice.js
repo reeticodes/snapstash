@@ -31,9 +31,9 @@ export const getAllAlbums = createAsyncThunk('/album/getAll', async(thunkAPI)=>{
     }
 })
 //get an album by id
-export const getAlbumById = createAsyncThunk('/album/id', async(postId,thunkAPI)=>{
+export const getAlbumById = createAsyncThunk('/album/id', async(albumId,thunkAPI)=>{
     try {
-        const res = await albumService.getAlbumById(albumId)
+        const res = await albumService.getAlbumById(albumId)  
         return res;
     } catch (err) {
         const message = err.response.data.errors
@@ -44,7 +44,7 @@ export const getAlbumById = createAsyncThunk('/album/id', async(postId,thunkAPI)
 //get user albums
 export const getUserAlbums = createAsyncThunk('/album/user', async(userId,thunkAPI)=>{
     try {
-        const res = await albumService.getUserAlbums(userId)
+        const res = await albumService.getUserAlbums()
         return res;
     } catch (err) {
         const message = err.response.data.errors

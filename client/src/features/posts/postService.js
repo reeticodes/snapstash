@@ -23,6 +23,10 @@ const getUserPosts = async(userId) => {
     const res = await axios.get(`http://localhost:5000/api/posts/user/${userId}`);
     return res.data
 }
+const getAlbumPosts = async(albumId) => {
+    const res = await axios.get(`http://localhost:5000/api/posts/album/${albumId}`);
+    return res.data
+}
 const deletePost = async(postId) => {
     const res = await axios.delete(`http://localhost:5000/api/posts/${postId}`)
     return res
@@ -57,6 +61,7 @@ const authService = {
     getAllPosts,
     getPostById,
     getUserPosts,
+    getAlbumPosts,
     deletePost,
     moveAlbum,
     likePost,
