@@ -1,6 +1,12 @@
 import {useState,useEffect} from 'react'
-import {Button,Modal,Input, Container} from '@mui/material'
+import {Button,Modal,Input, Container, Avatar} from '@mui/material'
 import TagInput from './TagInput'
+import {useSelector, useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+import {toast, ToastContainer} from 'react-toastify'
+
+import {createPost} from '../../features/posts/postSlice'
+import Spinner from '../Layout/Spinner'
 
 const style = {
     position: 'absolute',
@@ -23,39 +29,58 @@ const style = {
 
 function PostForm({open, setOpen}) {
 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {
+    post,
+    isError,
+    isLoading,
+    isSuccess,
+    message
+  } = useSelector((state) => state.post)
   
-  
-
+  const formData = new FormData();
 
   const [caption, setCaption] = useState("");
-  let [myfile, setmyfile] = useState("")
+  let [myfile, setmyfile] = useState("https://www.aig.ie/content/aig/emea/ie/en/existing-customers/myaig/_jcr_content/root/responsivegrid/container_copy/teaserflex_copy_copy.coreimg.90.1024.png/1629824897918/icon-upload-documents-540x180-min.png")
   let [tags, setTags] = useState([]);
-
+  const [imageURL, setimageURL] = useState(null)
 
   useEffect(() => {
+    if(isError){
+      if(message)
+      message.forEach(error => toast.error(error.msg));
+    }
+    if(isSuccess) toast.success('Posted')
  
-   }, [])
+   }, [message, isSuccess,isLoading, isError])
 
 
   const handleClose = () => setOpen(false)
   ;
-  const handleSelecetedTags = (items) => {
-    console.log(items);
-  }
 
-  const createPost = () =>{
-    const newPost = {
-      myfile, caption, tags
-    }
+
+  const handleSubmit = () =>{
+    console.log(`my caption is ${caption}`)
+    formData.append("myfile", myfile)
+    formData.append("caption", caption)
     
-
+    dispatch(createPost(formData))
+    handleClose()
   }
 
+  const handleFile = async(e) =>{
+    const file = e.target.files[0];
+    setimageURL(URL.createObjectURL(file))
+    const base64 = await convertToBase64(file);
+    setmyfile(file)
+  }
 
 
 
 
   return (
+   
     <Modal
   open={open}
   onClose={handleClose}
@@ -63,10 +88,29 @@ function PostForm({open, setOpen}) {
   <Container sx={style}>
     <div >Create Post</div>
   <div>
-    <Input type="file" onChange={(e)=>{setCaption(e.target.value)}}>lwhbja</Input>
-    <Input name="caption" value={caption} type="text" onChange={(e)=>{setCaption(e.target.value)}} ></Input>
+  <label  htmlFor="upload-photo">
+                <Avatar 
+                src={imageURL}
+                sx={{height:'200px', width:'200px', m: 1, bgcolor: '#CCEEBC' }}>
+                </Avatar>
+                <input
+                type="file"
+                name="myfile"
+                accept=".jpeg, .png, .jpg"
+                onChange={(e)=> handleFile(e)}
+                style={{ display: "none"}}
+                id="upload-photo"
+                />
+            </label>
+  
+    <Input name="caption" value={caption} type="text" onChange={(e)=>{ 
+      console.log(caption)
+      setCaption(e.target.value)
+      console.log(caption)
+    }
+      } ></Input>
     <TagInput tags={tags} setTags={setTags} />
-    <Button onClick={createPost} >Post</Button>
+    <Button onClick={handleSubmit} >Post</Button>
   </div>
   </Container>
 </Modal>
@@ -74,3 +118,17 @@ function PostForm({open, setOpen}) {
 }
 
 export default PostForm
+
+
+function convertToBase64(file){
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onload = () => {
+      resolve(fileReader.result)
+    };
+    fileReader.onerror = (error) => {
+      reject(error)
+    }
+  })
+}

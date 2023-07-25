@@ -28,10 +28,11 @@ export default function CreateProfile() {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
+  
   const [avatar, setAvatar] = useState(profile===null? '': profile.avatar)
   const [name, setname] = useState(profile===null? '': profile.name)
   const [bio, setbio] = useState(profile===null? '': profile.bio)
+  const [imageURL, setimageURL] = useState(profile===null? '': profile.avatar)
 
   useEffect(() => {
 
@@ -46,17 +47,21 @@ export default function CreateProfile() {
   
   const handleFileUpload = async(e) =>{
     const file = e.target.files[0];
-    const base64 = await convertToBase64(file);
-    setAvatar(base64)
+    // const base64 = await convertToBase64(file);
+    setimageURL(URL.createObjectURL(file))
+    setAvatar(file)
   }
+  const formData = new FormData();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const profileData = {
-      name,bio,avatar
-    }
-    console.log(profileData)
-    dispatch(createProfile(profileData))
+
+    console.log(name)
+    formData.append("name",name)
+    formData.append("bio",bio)
+    formData.append("avatar",avatar)
+    console.log(formData.get("name"))
+    dispatch(createProfile(formData))
   };
 
   return (
@@ -82,7 +87,7 @@ export default function CreateProfile() {
         > 
         <label  htmlFor="upload-photo">
                 <Avatar 
-                src={avatar}
+                src={imageURL}
                 sx={{height:'200px', width:'200px', m: 1, bgcolor: '#CCEEBC' }}>
                 </Avatar>
                 <input

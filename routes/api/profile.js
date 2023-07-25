@@ -1,8 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../../middleware/auth');
 const config = require('config');
+const multer  = require('multer')
 
+
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
+//middleware
+const auth = require('../../middleware/auth');
+const upload = multer({ dest: 'uploads/' })
+const {uploadFile} = require('../../config/s3')
+
+
+//Models
 const Profile = require('../../models/Profile');
 const Post = require('../../models/Posts')
 const User = require('../../models/User');
@@ -32,22 +44,31 @@ router.get('/me',auth,async (req,res) => {
 //@route POST api/profile
 //@desc Create or update profile
 //@access private
-router.post('/', [auth, [
-  check('name', 'name required').not().isEmpty()
-]],async (req,res) => {
-// console.log(req.body);
-const errors =validationResult(req);
-if(!errors.isEmpty()){
-  return res.status(400).json({errors: errors.array()});
-}
-    const { name,avatar,bio} = req.body;
+router.post('/', [
+  auth,
+  upload.single('avatar')
+],async (req,res) => {
+
+  const errors =validationResult(req);
+  if(!errors.isEmpty()){
+    return res.status(400).json({errors: errors.array()});
+  }
+    const { name,bio} = req.body;
+    const avatar = req.file
+
+    //Upload avatar to s3
+    const result = await uploadFile(avatar)
+    await unlinkFile(avatar.path)
+    const fileLocation = result.Location
+
+    console.log(fileLocation)
 
     //Build profile object
     const profileFields = {};
     profileFields.user = req.user.id;
     if(name) profileFields.name = name;
     if (bio) profileFields.bio = bio;
-    if(avatar) profileFields.avatar = avatar
+    if(avatar) profileFields.avatar = fileLocation
     else profileFields.avatar = `https://avatars.dicebear.com/api/bottts/${req.user.id}.svg`;
 
     const user = await User.findById(req.user.id).select('-password');

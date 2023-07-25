@@ -1,5 +1,5 @@
 import React, { useEffect, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import Spinner from '../../Components/Layout/Spinner'
 import { getCurrentProfile, reset } from '../../features/profile/profileSlice';
 import CreateProfile from './CreateProfile'
@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 
 function Dashboard() {
 
-  const navigate = useNavigate()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const {
     profile,
@@ -26,7 +26,6 @@ function Dashboard() {
 
   useEffect(() => {
     dispatch(getCurrentProfile())
-
   }, [getCurrentProfile])
   
 
@@ -34,8 +33,8 @@ function Dashboard() {
     <Spinner/>
    ) : (
     <Fragment>
-      {profile !== null ? navigate(`/profile/${user._id}`): 
-        navigate('/create-profile')
+      {profile !== null ? navigate(`/profile/${user._id}`):
+        <Navigate to ="/create-profile"/>
       }
     </Fragment>
    )

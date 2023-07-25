@@ -1,12 +1,22 @@
 import React from 'react'
+import {Card, CardContent, CardActions, Typography, Button} from '@mui/material'
 
-function Post() {
+function Post({post}) {
+  const {myfile, caption, keywords} = post
+
   return (
-    <div>
-      <img style={{width:'200px'}} src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA
-    AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
-        9TXL0Y4OHwAAAABJRU5ErkJggg=="></img>
-    </div>
+    <Card sx = {{maxWidth: '100%'}}>
+    <img src={myfile}/>
+    <CardContent>
+      <Typography>
+        {caption}
+      </Typography>
+    </CardContent>
+    <CardActions>
+      <Button size = "small">Like</Button>
+      <Button size = "small">Comment</Button>
+    </CardActions>
+   </Card>
   )
 }
 

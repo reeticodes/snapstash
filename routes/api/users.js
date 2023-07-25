@@ -92,3 +92,64 @@ router.post('/',[
 })
 
 module.exports = router;
+
+
+
+// //@route POST api/posts
+// //@desc Create a post 
+// //@access Private
+// router.post('/',[
+  
+//   auth,
+//   [
+//     check('myfile','file is required').not().isEmpty()
+//   ]
+// ], async(req,res) => {
+//   console.log(req.myfile)
+  
+//   const errors = validationResult(req);
+//   if(!errors.isEmpty()){
+//     return res.status(400).json({errors: errors.array()})
+//   }
+
+//   try {
+//       const profile = await Profile.findOne({
+//       user: req.user.id
+//     }).populate('user');
+
+//     //Create default Album
+//     let albumId;
+//     if(!req.body.albumId){
+//       let album =  await Album.findOne({name : 'My Pictures'});
+//       albumId = album._id
+//     } 
+//     else albumId = req.body.albumId
+
+    
+
+//     //Upload to s3
+//     const file = req.myfile
+//     const result = await uploadFile(file)
+//     await unlinkFile(file.path)
+//     const fileLocation = result.Location
+
+//     console.log(fileLocation)
+
+//     const newPost = new Posts({
+//       myfile: myfile,
+//       caption : req.body.caption,
+//       keywords: req.body.keywords,
+//       name : profile.name,
+//       avatar: profile.avatar,
+//       user: req.user.id,
+//       album : albumId
+//     })
+//     const post = await newPost.save();
+//     res.status(201).json(post)
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send('Server error')
+//   }
+    
+//   }
+// );

@@ -1,34 +1,219 @@
-// import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-// import postService from './postService'
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
+import postService from './postService'
 
-// const initialState = {
-//     posts: [],
-//     post:null,
-//     isError: false,
-//     isSuccess: false,
-//     isLoading: false,
-//     message:''
-// }
-// //Create a post
-// //get posts
-// //get a post
+const initialState = {
+    posts: [],
+    post:null,
+    isError: false,
+    isSuccess: false,
+    isLoading: false,
+    message:''
+}
+//Create a post
+export const createPost = createAsyncThunk('post/create', async(post, thunkAPI)=>{
+    try {
+        return await postService.createPost(post);
+    } catch (err) {
+        
+        const message = err.response.data.errors;
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+//get all posts
+export const getAllPosts = createAsyncThunk('/posts/getAll', async(thunkAPI)=>{
+    try {
+        const res = await postService.getAllPosts()
+        return res
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+//get post by id
+export const getPostById = createAsyncThunk('/post/id', async(postId,thunkAPI)=>{
+    try {
+        const res = await postService.getPostById(postId)
+        return res;
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+//get user posts
+export const getUserPosts = createAsyncThunk('/posts/user', async(userId,thunkAPI)=>{
+    try {
+        const res = await postService.getUserPosts(userId)
+        return res;
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+//delete post
+export const deletePost = createAsyncThunk('/post/delete', async(postId,thunkAPI)=>{
+    try {
+        const res = await postService.deletePost(postId)
+        return res
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+//move post from album
+export const movePost = createAsyncThunk('/post/move', async(postData, thunkAPI)=>{
+    try {
+        const res = await postService.movePost(postData)
+        return res
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 
-// export const postSlice = createSlice({
-//     name:'posts',
-//     initialState,
-//     reducers:{
-//         reset: (state) =>{
-//             state.isError = false
-//             state.isLoading = false
-//             state.isSuccess = false
-//             state.message= ''
-//         }
-//     },
-//     extraReducers : (builder) =>{
+//Like a post
+export const likePost = createAsyncThunk('/post/like', async(postId, thunkAPI)=>{
+    try {
+        const res = await postService.likePost(postId)
+        return res
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+//Unlike a post
+export const unlikePost = createAsyncThunk('/post/unlike', async(postId, thunkAPI)=>{
+    try {
+        const res = await postService.unlikePost(postId)
+        return res
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+//Comment on a post
+export const commentPost = createAsyncThunk('/post/comment', async(formData, thunkAPI)=>{
+    try {
+        const res = await postService.commentPost(formData)
+        return res
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 
-//     }
-// })
+export const postSlice = createSlice({
+    name : 'post',
+    initialState,
+    reducers:{
+        reset: (state) =>{
+            state.isError = false
+            state.isLoading = false
+            state.isSuccess = false
+            state.message= ''
+        },
+    },
+    extraReducers : (builder) =>{
+        builder
+        .addCase(createPost.pending, (state)=>{
+            state.isLoading = true
+        })
+        .addCase(createPost.fulfilled,(state,action)=>{
+            state.post = action.payload,
+            state.isSuccess = true;
+            state.isLoading = false;
+        })
+        .addCase(createPost.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload
+            state.isSuccess = false;
+        })
+
+        .addCase(getAllPosts.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(getAllPosts.fulfilled,(state,action)=>{
+            state.posts = action.payload,
+            state.isLoading = false;
+        })
+        .addCase(getAllPosts.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload
+            state.posts = []
+        })
 
 
-// export const {reset} = postSlice.actions
-// export default postSlice.reducer
+        .addCase(getPostById.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(getPostById.fulfilled,(state,action)=>{
+            state.post = action.payload,
+            state.isLoading = false;
+        })
+        .addCase(getPostById.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+            state.post = null;
+            state.isSuccess = false;
+        })
+
+        .addCase(getUserPosts.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(getUserPosts.fulfilled,(state,action)=>{
+            state.posts = action.payload,
+            state.isLoading = false;
+        })
+        .addCase(getUserPosts.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload
+            state.posts = []
+        })
+
+        .addCase(deletePost.pending, (state)=>{
+            state.isLoading = true
+        })
+        .addCase(deletePost.fulfilled,(state,action)=>{
+            state.post = null,
+            state.isSuccess = true;
+            state.isLoading = false;
+            message = action.payload
+        })
+        .addCase(deletePost.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload
+            state.isSuccess = false;
+        })
+
+        .addCase(movePost.pending, (state)=>{
+            state.isLoading = true
+        })
+        .addCase(movePost.fulfilled,(state,action)=>{
+            state.isSuccess = true;
+            state.isLoading = false;
+            message = action.payload
+        })
+        .addCase(movePost.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload
+            state.isSuccess = false;
+        })
+    }
+})
+
+
+export const {reset} = postSlice.actions
+export default postSlice.reducer

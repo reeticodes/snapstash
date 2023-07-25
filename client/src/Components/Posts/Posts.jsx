@@ -1,22 +1,46 @@
-import React from 'react'
+import {useState,useEffect} from 'react'
+import {Stack,Button,Modal,Input, Container, Avatar} from '@mui/material'
+import TagInput from './TagInput'
+import {useSelector, useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+import {toast, ToastContainer} from 'react-toastify'
+
+import {getAllPosts} from '../../features/posts/postSlice'
+import Spinner from '../Layout/Spinner'
 import PostItem from './PostItem'
-import {Card,Stack,Button, CardContent, CardActions, Typography} from '@mui/material'
 
 function Posts() {
-  return (
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {
+    posts,
+    isError,
+    isLoading,
+    isSuccess,
+    message,
+    
+  } = useSelector((state) => state.post)
+
+  const [Posts, setposts] = useState([])
+
+  useEffect(() => {
+    dispatch(getAllPosts())
+
+    if(isError){
+      if(message)
+      message.forEach(error => toast.error(error.msg));
+    }
+
+   }, [message, isSuccess, getAllPosts, isError])
+  
+
+  return isLoading ? <Spinner/> : (
     <Stack spacing={4}>
-       <Card sx = {{maxWidth: '100%'}}>
-        <img src='https://images.unsplash.com/photo-1551963831-b3b1ca40c98e'/>
-        <CardContent>
-          <Typography>
-            Food
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button size = "small">Like</Button>
-          <Button size = "small">Comment</Button>
-        </CardActions>
-       </Card>
+      {posts.map((post)=>
+      <PostItem key={post._id} post = {post}/>
+      )}
+     
 
       </Stack>
   )
