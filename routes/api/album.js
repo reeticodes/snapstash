@@ -75,9 +75,10 @@ router.get('/user',auth,async(req,res)=>{
   //@route  GET api/albums/name
 //@desc   Get album by name 
 //@access Private
-router.get('/name',auth,async(req,res)=>{
+router.get('/:name',auth,async(req,res)=>{
   try {
-    let name = req.body.name;
+    let name = req.params.name;
+    console.log(name)
     const album = await Album.findOne({name: name})
     res.status(200).json({album:album});
   } catch (err) {
@@ -132,6 +133,38 @@ router.delete('/:id', auth, async (req, res) => {
     }
   });
   
+  //@route  PUT api/abums/changeAlbum
+//@desc   Change the album of a post
+//@access Private
+router.put('/',auth,async(req,res)=>{
+  try {
+    let newAlbum = req.body.albumId;
+
+    console.log(newAlbum)
+    
+    const post = await Posts.findOne({_id: req.body.postId});
+    
+    if (!post) return res.status(400).json({ msg: "Post not found" })
+    //Check user
+    if(post.user.toString()!== req.user.id)
+    return res.status(401).json({msg:"User Not Authorised"});
+
+
+    post.album = newAlbum;
+
+    newAlbum = await Album.findById(newAlbum)
+    console.log(newAlbum)
+    await post.save();
+    
+    res.json(newAlbum)
+    
+  } catch (err) {
+    if (err.kind == 'ObjectId')
+      return res.status(400).json({ msg: "Post not found" });
+    else
+      res.status(500).send('Server error!');
+  }
+})
 
 
 

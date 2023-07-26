@@ -3,9 +3,9 @@ import {Link, useNavigate, useParams} from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
 
 import {toast} from 'react-toastify'
-import {getPostById,movePost, deletePost,likePost, unlikePost, commentPost} from '../../features/posts/postSlice'
+import {getPostById, deletePost,likePost, unlikePost, commentPost} from '../../features/posts/postSlice'
 import {getCurrentProfile, getProfileById} from '../../features/profile/profileSlice'
-import {getAlbumById, getUserAlbums} from '../../features/album/albumSlice'
+import {getAlbumById, getUserAlbums,movePost} from '../../features/album/albumSlice'
 
 import {FormControl, InputLabel, Select, MenuItem,
   Grid,Button, Container, Card,Avatar,Typography, CardActions, CardContent, CardMedia, CardHeader, TextField} from '@mui/material'
@@ -83,8 +83,7 @@ function PostIem() {
     
   }
   return (
-    (albumLoading|| isLoading || post===null ||
-       profile===null ||album===null ||!albums )  ? <Spinner/> :
+    (isLoading || profileLoading||albumLoading || post===null || profile===null || album===null|| !album)  ? <Spinner/> :
     <Grid container spacing={2} sx={{
       display:'flex',
       alignItems:'center',
@@ -161,6 +160,8 @@ function PostIem() {
            <span>💬</span>
 <span>{post.comments&& <span>{post.comments.length}</span> }</span>
            </Button>
+           <Link to={post.myfile}><Button>download</Button></Link>
+           
 
       {post.user===profile.user._id && 
         <Button>

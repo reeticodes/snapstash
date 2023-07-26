@@ -1,14 +1,20 @@
 import {useState,useEffect} from 'react'
-import {Button,Modal,Input, Container, Avatar} from '@mui/material'
+import {Button,FormControl, InputLabel, Select, MenuItem,Modal,Input, Container, Avatar, Grid, Card, TextField, Typography} from '@mui/material'
 import TagInput from './TagInput'
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {toast, ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import {createPost} from '../../features/posts/postSlice'
+import {getAlbumById,getAlbumByName, getUserAlbums,movePost} from '../../features/album/albumSlice'
+
 import Spinner from '../Layout/Spinner'
 
 const style = {
+    display:'flex',
+    justifyContent:'center',
+    alignContent:'center',
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -38,6 +44,10 @@ function PostForm({open, setOpen}) {
     isSuccess,
     message
   } = useSelector((state) => state.post)
+  const {
+    albums
+    , isLoading:albumLoading
+  } = useSelector((state) => state.album)
   
   const formData = new FormData();
 
@@ -45,28 +55,32 @@ function PostForm({open, setOpen}) {
   let [myfile, setmyfile] = useState("https://www.aig.ie/content/aig/emea/ie/en/existing-customers/myaig/_jcr_content/root/responsivegrid/container_copy/teaserflex_copy_copy.coreimg.90.1024.png/1629824897918/icon-upload-documents-540x180-min.png")
   let [tags, setTags] = useState([]);
   const [imageURL, setimageURL] = useState(null)
+  const [albumId, setalbumId] = useState('')
+  const [albumName, setalbumName] = useState('')
 
   useEffect(() => {
     if(isError){
+      console.log('CAUGH ERROR')
       if(message)
       message.forEach(error => toast.error(error.msg));
     }
     if(isSuccess) toast.success('Posted')
+
+    dispatch(getUserAlbums())
  
-   }, [message,createPost, isSuccess,isLoading, isError])
+   }, [message,createPost,getUserAlbums, isError])
+   
 
 
   const handleClose = () => setOpen(false)
-  ;
-
 
   const handleSubmit = () =>{
+    console.log(albumId)
     formData.append("myfile", myfile)
     formData.append("caption", caption)
     formData.append("keywords", tags)
+    formData.append("album", albumId)
 
-    console.log(tags)
-    
     dispatch(createPost(formData))
     handleClose()
   }
@@ -78,6 +92,14 @@ function PostForm({open, setOpen}) {
     setmyfile(file)
   }
 
+  const handleAlbumchange = (e) =>{
+
+    console.log(e.target.value)
+    const newALbumId = (event.target.getAttribute('albumid'));
+    
+    setalbumId(newALbumId)
+    setalbumName(e.target.value)
+  }
 
 
 
@@ -87,32 +109,64 @@ function PostForm({open, setOpen}) {
   open={open}
   onClose={handleClose}
 >
-  <Container sx={style}>
-    <div >Create Post</div>
   <div>
-  <label  htmlFor="upload-photo">
-                <Avatar 
-                src={imageURL}
-                sx={{height:'200px', width:'200px', m: 1, bgcolor: '#CCEEBC' }}>
-                </Avatar>
-                <input
-                type="file"
-                name="myfile"
-                accept=".jpeg, .png, .jpg"
-                onChange={(e)=> handleFile(e)}
-                style={{ display: "none"}}
-                id="upload-photo"
-                />
-            </label>
-  
-    <Input name="caption" value={caption} type="text" onChange={(e)=>{ 
-      setCaption(e.target.value)
-    }}/>
-
+ <Grid container sx={style} spacing={1}>
+    <Grid item xs={12}>
+    <label  htmlFor="upload-photo">
+            <Avatar 
+            src={imageURL}
+            sx={{height:'200px', width:'200px', m: 1, bgcolor: '#CCEEBC' }}>
+            </Avatar>
+            <input
+            type="file"
+            name="myfile"
+            accept=".jpeg, .png, .jpg"
+            onChange={(e)=> handleFile(e)}
+            style={{ display: "none"}}
+            id="upload-photo"
+            />
+        </label>
+    </Grid>
+    <Grid item xs={12}>
+      <Typography>Write a caption</Typography>
+    <TextField sx={{width:'80%'}} name="caption" value={caption} type="text" onChange={(e)=>{ 
+  setCaption(e.target.value)
+}}/>
+    </Grid>
+    <Grid xs={12} item>
     <TagInput tags={tags} setTags={setTags} />
+    </Grid>
+    <Grid item xs={12}>
+    <FormControl fullWidth>
+            <InputLabel >Album</InputLabel>
+            <Select
+              value={albumName}
+              label="Album"
+              onChange={handleAlbumchange}
+            >
+              
+              {
+              albums.map((album)=>
+              (<MenuItem
+                 key={album._id}
+                 name={album.name}
+                 value={album.name}
+                 albumid = {album._id}
+                 onClick={handleAlbumchange}
+                 >
+                  {album.name}
+                </MenuItem>))
+              }
+            
+            </Select>
+          </FormControl>
+    </Grid>
+    <Grid item>
     <Button onClick={handleSubmit} >Post</Button>
-  </div>
-  </Container>
+    </Grid>
+ </Grid>
+ <ToastContainer/>
+ </div>
 </Modal>
   )
 }
@@ -132,3 +186,15 @@ function convertToBase64(file){
     }
   })
 }
+
+{/* <Container sx={style}>
+<div >Create Post</div>
+<div>
+
+
+
+
+
+
+</div>
+</Container> */}

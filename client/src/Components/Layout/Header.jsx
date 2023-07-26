@@ -71,14 +71,13 @@ export default function ButtonAppBar() {
             <MenuIcon/>
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link to='/'>
+            <Link to='/posts'>
             Snapstash
             </Link>
           </Typography>
 
           <Button color="inherit"> <Link to='/posts'>Feed</Link> </Button>
           <Button color="inherit"> <Link to='/dashboard'>Profile</Link> </Button>
-          <Button color="inherit"> <Link to='/album/:id'>My Album</Link> </Button>
           <Button color="inherit"> <Link onClick={onClick}>Logout</Link> </Button>
           
     </Toolbar>
@@ -90,6 +89,7 @@ export default function ButtonAppBar() {
       <AppBar  sx={{backgroundColor: "#BA704F"}} position="static">
        <span></span> {user ? authLinks : guestLinks }
       </AppBar>
+      <ToastContainer/>
     </Box>
   );
 }

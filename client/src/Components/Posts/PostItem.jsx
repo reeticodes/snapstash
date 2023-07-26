@@ -9,6 +9,9 @@ import {likePost, unlikePost, commentPost} from '../../features/posts/postSlice'
 
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import {toast, ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 
 function Post({isLoading,post, profile}) {
 
@@ -77,6 +80,7 @@ function Post({isLoading,post, profile}) {
       
       
     </CardActions>
+    <ToastContainer/>
    </Card>
   )
 }

@@ -10,9 +10,9 @@ const initialState = {
     message:''
 }
 //Create an album
-export const createAlbum = createAsyncThunk('album/create', async(post, thunkAPI)=>{
+export const createAlbum = createAsyncThunk('album/create', async(album, thunkAPI)=>{
     try {
-        return await albumService.createAlbum(post);
+        return await albumService.createAlbum(album);
     } catch (err) {
         
         const message = err.response.data.errors;
@@ -41,6 +41,17 @@ export const getAlbumById = createAsyncThunk('/album/id', async(albumId,thunkAPI
         return thunkAPI.rejectWithValue(message)
     }
 })
+//get an album by name
+export const getAlbumByName = createAsyncThunk('/album/name', async(name,thunkAPI)=>{
+    try {
+        const res = await albumService.getAlbumByName(name)  
+        return res;
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 //get user albums
 export const getUserAlbums = createAsyncThunk('/album/user', async(userId,thunkAPI)=>{
     try {
@@ -56,6 +67,19 @@ export const getUserAlbums = createAsyncThunk('/album/user', async(userId,thunkA
 export const deleteAlbum = createAsyncThunk('/albums/delete', async(postId,thunkAPI)=>{
     try {
         const res = await albumService.deleteAlbum(albumId)
+        return res
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//move post from album
+export const movePost = createAsyncThunk('/album/move', async(postData, thunkAPI)=>{
+    try {
+        console.log(postData)
+        const res = await albumService.movePost(postData)
         return res
     } catch (err) {
         const message = err.response.data.errors
@@ -121,6 +145,20 @@ export const albumSlice = createSlice({
             state.album = null;
             state.isSuccess = false;
         })
+        .addCase(getAlbumByName.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(getAlbumByName.fulfilled,(state,action)=>{
+            state.album = action.payload,
+            state.isLoading = false;
+        })
+        .addCase(getAlbumByName.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+            state.album = null;
+            state.isSuccess = false;
+        })
 
         .addCase(getUserAlbums.pending, (state)=>{
             state.isLoading = true;
@@ -146,6 +184,20 @@ export const albumSlice = createSlice({
             message = action.payload
         })
         .addCase(deleteAlbum.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload
+            state.isSuccess = false;
+        })
+        .addCase(movePost.pending, (state)=>{
+            state.isLoading = true
+        })
+        .addCase(movePost.fulfilled,(state,action)=>{
+            state.isSuccess = true;
+            state.isLoading = false;
+            state.album = action.payload
+        })
+        .addCase(movePost.rejected, (state,action)=>{
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload

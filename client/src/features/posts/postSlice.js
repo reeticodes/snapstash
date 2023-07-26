@@ -74,18 +74,7 @@ export const deletePost = createAsyncThunk('/post/delete', async(postId,thunkAPI
         return thunkAPI.rejectWithValue(message)
     }
 })
-//move post from album
-export const movePost = createAsyncThunk('/post/move', async(postData, thunkAPI)=>{
-    try {
-        console.log(postData)
-        const res = await postService.moveAlbum(postData)
-        return res
-    } catch (err) {
-        const message = err.response.data.errors
-        console.log(message)
-        return thunkAPI.rejectWithValue(message)
-    }
-})
+
 
 //Like a post
 export const likePost = createAsyncThunk('/post/like', async(postId, thunkAPI)=>{
@@ -227,20 +216,7 @@ export const postSlice = createSlice({
             state.isSuccess = false;
         })
 
-        .addCase(movePost.pending, (state)=>{
-            state.isLoading = true
-        })
-        .addCase(movePost.fulfilled,(state,action)=>{
-            state.isSuccess = true;
-            state.isLoading = false;
-            state.message = action.payload
-        })
-        .addCase(movePost.rejected, (state,action)=>{
-            state.isLoading = false;
-            state.isError = true;
-            state.message = action.payload
-            state.isSuccess = false;
-        })
+        
 
         .addCase(likePost.pending, (state)=>{
             state.isLoading = true;

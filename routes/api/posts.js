@@ -27,6 +27,9 @@ const Album = require('../../models/Album')
 //@access Private
 router.post('/',[
   upload.single('myfile'),
+  check('caption').not().isEmpty().withMessage('Caption is required!')
+  .custom((value, {req})=>{if(!req.file) throw new Error('Image is required!');
+  return true}),
   auth
 ], async(req,res) => {
 
@@ -36,7 +39,6 @@ router.post('/',[
   }
 
   try {
-    if(!req.file) res.json('Post cannot be empty')
       const profile = await Profile.findOne({
       user: req.user.id
     }).populate('user');

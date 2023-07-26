@@ -23,8 +23,8 @@ export default function TagInput({tags,setTags}) {
   };
   
   return (
-    <div >
-      <h1>Tags input with React</h1>
+    <div  >
+      <h1 style={{ padding:'15px'}}>Enter picture tags</h1>
       <div className="tag-container">
         {tags.map((tag, index) => {
           return (

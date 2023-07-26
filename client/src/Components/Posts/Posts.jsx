@@ -4,11 +4,13 @@ import TagInput from './TagInput'
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {toast, ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import PostForm from './PostForm'
 
 import {getAllPosts} from '../../features/posts/postSlice'
 import {getCurrentProfile} from '../../features/profile/profileSlice'
+import {loadUser} from '../../features/auth/authSlice'
 
 import Spinner from '../Layout/Spinner'
 import PostItem from './PostItem'
@@ -35,6 +37,7 @@ function Posts() {
 
 
   useEffect(() => {
+    dispatch(loadUser())
     dispatch(getAllPosts())
     dispatch(getCurrentProfile())
 
@@ -44,11 +47,11 @@ function Posts() {
     }
 
 
-   }, [getCurrentProfile, getAllPosts,message, isError])
+   }, [getCurrentProfile, getAllPosts,message, isError, loadUser])
 
 
    return (
-    (isLoading && profileLoading && posts===null && profile===null) ? <Spinner/> :
+    ( isLoading || profileLoading || posts===null || profile===null) ? <Spinner/> :
     <div>
       <Container maxWidth="sm" style={{marginTop:'5%'}}>
         <Box>
@@ -66,6 +69,7 @@ function Posts() {
         
 
         </Stack>
+        <ToastContainer/>
       </Container>
     </div>
   )

@@ -7,6 +7,9 @@ import { loadUser } from '../../features/auth/authSlice';
 import {Edit} from '@mui/icons-material'
 import {Container,Button, Paper, Grid, Card, CardMedia, CardActionArea, CardContent, Typography} from '@mui/material'
 import AlbumFeed from './AlbumFeed';
+import 'react-toastify/dist/ReactToastify.css'
+import {toast, ToastContainer} from 'react-toastify'
+
 
 function Profile() {
   const navigate = useNavigate()
@@ -50,6 +53,7 @@ function Profile() {
   
       <Grid item xs={12}><AlbumFeed/></Grid>
       </Grid>
+      <ToastContainer/>
     </Container>
   )
 }

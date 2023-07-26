@@ -21,6 +21,9 @@ import Profile from './Components/Profile/Profile'
 import Homepage from './Components/Layout/Homepage'
 import Album from './Components/Albums/Album'
 import PostItem from './Components/Post/PostIem'
+
+
+
 function App() {
 
   if (localStorage.user) {
@@ -52,8 +55,7 @@ function App() {
               <Route path='/posts' element={<Posts/>} />
               <Route path='/post/:id' element={<PostItem/>} />
               <Route path='/profile/:id' element = {<Profile/>}/>
-              <Route path='/album/:id' element = {<Album/>}/>
-            </Route>
+              <Route path='/album/:id' element = {<Album/>}/>            </Route>
             
           </Routes>
         </div>

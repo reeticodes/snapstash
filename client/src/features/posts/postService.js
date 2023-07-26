@@ -29,15 +29,6 @@ const deletePost = async(postId) => {
     const res = await axios.delete(`http://localhost:5000/api/posts/${postId}`)
     return res.data
 }
-const moveAlbum = async(postData) =>{
-    console.log('hellooooooooooo')
-    
-    const config ={headers: { 'Content-Type' : 'Application/json' }}
-    const body = JSON.stringify(postData)
-    const res = await axios.put('http://localhost:5000/api/posts/', body, config)
-    console.log(res.data)
-    return res.data
-}
 
 
 const likePost = async(postId) =>{
@@ -71,7 +62,6 @@ const authService = {
     getUserPosts,
     getAlbumPosts,
     deletePost,
-    moveAlbum,
     likePost,
     unlikePost,
     commentPost
