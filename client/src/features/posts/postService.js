@@ -2,8 +2,7 @@ import axios from 'axios'
 
 
 const createPost = async(post) =>{
-    console.log('heloooooo')
-    console.log(post.get("caption"))
+   
     const config ={headers: { 'Content-Type' : 'multipart/form-data' }}
     const res = await axios.post('http://localhost:5000/api/posts',post,config);
     console.log(res.data)
@@ -11,7 +10,6 @@ const createPost = async(post) =>{
 }
 const getAllPosts = async() => {
     const res = await axios.get('http://localhost:5000/api/posts')
-    console.log(res.data)
     return res.data
 }
 
@@ -29,30 +27,40 @@ const getAlbumPosts = async(albumId) => {
 }
 const deletePost = async(postId) => {
     const res = await axios.delete(`http://localhost:5000/api/posts/${postId}`)
-    return res
+    return res.data
 }
 const moveAlbum = async(postData) =>{
-    const {postId, newAlbumId} = postData;
-    const res = await axios.put('http://localhost:5000/api/posts/changeAlbum')
-    return res
+    console.log('hellooooooooooo')
+    
+    const config ={headers: { 'Content-Type' : 'Application/json' }}
+    const body = JSON.stringify(postData)
+    const res = await axios.put('http://localhost:5000/api/posts/', body, config)
+    console.log(res.data)
+    return res.data
 }
 
 
 const likePost = async(postId) =>{
-    const res = await axios.put(`http://localhost:5000/api/posts/like/${postId}`)
-    return res;
+    const config ={headers: { 'Content-Type' : 'Application/json' }}
+    const res = await axios.put(`http://localhost:5000/api/posts/like/${postId}`,config)
+
+    return res.data
 }
 
 const unlikePost = async(postId) =>{
     const res = await axios.put(`http://localhost:5000/api/posts/unlike/${postId}`)
-    return res;
+    return res.data
 }
-const commentPost = async(formData) =>{
-    const {postId, text} = formData
+const commentPost = async({postId, text}) =>{
+    console.log(postId)
+    console.log(text)
+    console.log('making request....')
     const config ={headers: { 'Content-Type' : 'application/json' }}
-    const body = JSON.stringify(text)
-    const res = await axios.post(`http://localhost:5000/api/posts/unlike/${postId}`, body, config)
-    return res;
+    const body = JSON.stringify({text})
+    console.log('making request....')
+    const res = await axios.post(`http://localhost:5000/api/posts/comment/${postId}`,body, config)
+    console.log(res)
+    return res.data
 }
 
 

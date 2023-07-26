@@ -77,7 +77,8 @@ export const deletePost = createAsyncThunk('/post/delete', async(postId,thunkAPI
 //move post from album
 export const movePost = createAsyncThunk('/post/move', async(postData, thunkAPI)=>{
     try {
-        const res = await postService.movePost(postData)
+        console.log(postData)
+        const res = await postService.moveAlbum(postData)
         return res
     } catch (err) {
         const message = err.response.data.errors
@@ -90,6 +91,7 @@ export const movePost = createAsyncThunk('/post/move', async(postData, thunkAPI)
 export const likePost = createAsyncThunk('/post/like', async(postId, thunkAPI)=>{
     try {
         const res = await postService.likePost(postId)
+        console.log(res)
         return res
     } catch (err) {
         const message = err.response.data.errors
@@ -119,6 +121,8 @@ export const commentPost = createAsyncThunk('/post/comment', async(formData, thu
         return thunkAPI.rejectWithValue(message)
     }
 })
+
+
 
 export const postSlice = createSlice({
     name : 'post',
@@ -229,7 +233,7 @@ export const postSlice = createSlice({
         .addCase(movePost.fulfilled,(state,action)=>{
             state.isSuccess = true;
             state.isLoading = false;
-            message = action.payload
+            state.message = action.payload
         })
         .addCase(movePost.rejected, (state,action)=>{
             state.isLoading = false;
@@ -237,6 +241,48 @@ export const postSlice = createSlice({
             state.message = action.payload
             state.isSuccess = false;
         })
+
+        .addCase(likePost.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(likePost.fulfilled,(state,action)=>{
+            state.post = action.payload,
+            state.isLoading = false;
+        })
+        .addCase(likePost.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+            state.isSuccess = false;
+        })
+        .addCase(unlikePost.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(unlikePost.fulfilled,(state,action)=>{
+            state.post = action.payload,
+            state.isLoading = false;
+        })
+        .addCase(unlikePost.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+            state.isSuccess = false;
+        })
+        .addCase(commentPost.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(commentPost.fulfilled,(state,action)=>{
+            state.post = action.payload,
+            state.isLoading = false;
+            state.isSuccess = true
+        })
+        .addCase(commentPost.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+            state.isSuccess = false;
+        })
+
     }
 })
 

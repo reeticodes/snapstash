@@ -76,7 +76,7 @@ export default function ButtonAppBar() {
             </Link>
           </Typography>
 
-          <Button color="inherit"> <Link to='/feed'>Feed</Link> </Button>
+          <Button color="inherit"> <Link to='/posts'>Feed</Link> </Button>
           <Button color="inherit"> <Link to='/dashboard'>Profile</Link> </Button>
           <Button color="inherit"> <Link to='/album/:id'>My Album</Link> </Button>
           <Button color="inherit"> <Link onClick={onClick}>Logout</Link> </Button>

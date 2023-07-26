@@ -8,6 +8,8 @@ import {toast, ToastContainer} from 'react-toastify'
 import PostForm from './PostForm'
 
 import {getAllPosts} from '../../features/posts/postSlice'
+import {getCurrentProfile} from '../../features/profile/profileSlice'
+
 import Spinner from '../Layout/Spinner'
 import PostItem from './PostItem'
 
@@ -26,12 +28,15 @@ function Posts() {
     isLoading,
     isSuccess,
     message,
-    
   } = useSelector((state) => state.post)
+
+  const {profile, isLoading: profileLoading} = useSelector((state)=>state.profile)
+
 
 
   useEffect(() => {
     dispatch(getAllPosts())
+    dispatch(getCurrentProfile())
 
     if(isError){
       if(message)
@@ -39,11 +44,11 @@ function Posts() {
     }
 
 
-   }, [getAllPosts,message, isError])
+   }, [getCurrentProfile, getAllPosts,message, isError])
 
 
    return (
-    isLoading || posts===null ? <Spinner/> :
+    (isLoading && profileLoading && posts===null && profile===null) ? <Spinner/> :
     <div>
       <Container maxWidth="sm" style={{marginTop:'5%'}}>
         <Box>
@@ -52,7 +57,11 @@ function Posts() {
         <PostForm open={open} setOpen={setOpen}/>
         <Stack spacing={4}>
           {posts.map((post)=>
-          <PostItem key={post._id} post = {post}/>
+          <PostItem
+          isLoading={isLoading} 
+          profile={profile}
+           key={post._id} 
+           post = {post}/>
           )}
         
 

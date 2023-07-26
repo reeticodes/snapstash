@@ -69,7 +69,7 @@ router.post('/',[
       album : albumId
     })
     const post = await newPost.save();
-    res.status(201).json(post)
+    res.json(post)
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error')
@@ -83,6 +83,8 @@ router.post('/',[
 router.put('/',auth,async(req,res)=>{
   try {
     let newAlbum = req.body.albumId;
+
+    console.log(newAlbum)
     
     const post = await Posts.findOne({_id: req.body.postId});
     
@@ -95,7 +97,7 @@ router.put('/',auth,async(req,res)=>{
     post.album = newAlbum;
     await post.save();
     
-    res.status(200).json(post)
+    res.json(post)
     
   } catch (err) {
     if (err.kind == 'ObjectId')
@@ -219,8 +221,9 @@ router.put('/like/:id',auth,async (req,res)=>{
       post.likes.unshift({user: req.user.id });
 
       await post.save();
+      console.log('liked')
 
-      res.json(post.likes);
+      res.json(post);
     
   }catch(err){
     console.error(err.message);
@@ -249,8 +252,9 @@ router.put('/unlike/:id', auth, async (req, res) => {
     
 
     await post.save();
+    console.log('unliked')
 
-    res.json(post.likes);
+    res.json(post);
 
   } catch (err) {
     console.error(err.message);
@@ -265,17 +269,18 @@ router.put('/unlike/:id', auth, async (req, res) => {
 router.post('/comment/:id', [auth, [
   check('text', 'Text is required').not().isEmpty()
 ]], async (req, res) => {
+  console.log('POST THE COMMENT!')
+  console.log(req.body)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
   }
 
   try {
-    const user = await User.findById(req.user.id).select('-password');
     const post = await Posts.findById(req.params.id);
-    
     const profile = await Profile.findOne(req.profile).populate('user');
     
+    console.log('what')
     const newComment = {
       text: req.body.text,
       name: profile.name,
@@ -286,7 +291,8 @@ router.post('/comment/:id', [auth, [
 
     post.comments.unshift(newComment);
     await post.save();
-    res.json(post.comments);
+    res.json(post);
+
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error')

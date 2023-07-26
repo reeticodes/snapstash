@@ -53,7 +53,7 @@ export default function Login() {
     }
     if(isSuccess || user) {
       dispatch(loadUser())
-       navigate('/feed')
+       navigate('/posts')
     }
     dispatch(reset())
   
@@ -81,7 +81,7 @@ export default function Login() {
   };
 
   if (isAuthenticated) {
-		navigate('/feed')
+		navigate('/posts')
 	}
 
   return (
