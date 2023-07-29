@@ -45,11 +45,12 @@ router.post('/',[
 
     //Create default Album
     let albumId;
-    if(!req.body.albumId){
+    console.log(req.body)
+    if(!req.body.album){
       let album =  await Album.findOne({name : 'My Pictures'});
       albumId = album._id
     } 
-    else albumId = req.body.albumId
+    else albumId = req.body.album
 
 
      //Upload to s3
@@ -59,12 +60,13 @@ router.post('/',[
     const fileLocation = result.Location
 
     console.log(fileLocation)
-    
-
+    console.log(req.body.keywords)
+    const keywords = req.body.keywords.split(',').map((word)=>word.trim())
+    // console.log(keywords)
     const newPost = new Posts({
       myfile: fileLocation,
       caption : req.body.caption,
-      keywords: req.body.keywords,
+      keywords: keywords,
       name : profile.name,
       avatar: profile.avatar,
       user: req.user.id,
@@ -160,7 +162,7 @@ router.get('/album/:id', auth, async(req,res)=>{
 //@route  GET api/posts/:id
 //@desc   Get posts by id
 //@access Private
-router.get('/:id', async (req, res) => {
+router.get('/id/:id', async (req, res) => {
   try {
     const post = await Posts.findById(req.params.id)
     //.sort({ date: -1 });
@@ -304,7 +306,19 @@ router.post('/comment/:id', [auth, [
 );
 
 
-
+router.post('/search', auth, async(req,res)=>{
+  try {
+    console.log('hello')
+    console.log(req.body)
+    
+    // const keywords = req.body.tags.split(',').map((word)=>word.trim())
+    const posts = await Posts.find({"keywords": {$in: req.body.tags}})
+    res.json(posts)
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error')
+  }
+})
 
 
 

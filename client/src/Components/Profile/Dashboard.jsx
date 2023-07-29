@@ -33,7 +33,7 @@ function Dashboard() {
     <Spinner/>
    ) : (
     <Fragment>
-      {profile !== null ? navigate(`/profile/${user._id}`):
+      {profile !== null ? <Navigate to={`/profile/${user._id}`}/>:
         <Navigate to ="/create-profile"/>
       }
     </Fragment>

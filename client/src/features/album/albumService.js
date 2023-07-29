@@ -14,12 +14,13 @@ const getAllAlbums = async() => {
 }
 
 const getAlbumById = async(albumId) => {
-    const res = await axios.get(`http://localhost:5000/api/albums/${albumId}`);
+    const res = await axios.get(`http://localhost:5000/api/albums/id/${albumId}`);
+    console.log(res.data)
     return res.data
 }
 const getAlbumByName = async(name) => {
     console.log(name)
-    const res = await axios.get(`http://localhost:5000/api/albums/${name}`);
+    const res = await axios.get(`http://localhost:5000/api/albums/name/${name}`);
     console.log(res.data)
     return res.data
 }

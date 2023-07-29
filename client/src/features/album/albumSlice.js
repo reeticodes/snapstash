@@ -33,6 +33,7 @@ export const getAllAlbums = createAsyncThunk('/album/getAll', async(thunkAPI)=>{
 //get an album by id
 export const getAlbumById = createAsyncThunk('/album/id', async(albumId,thunkAPI)=>{
     try {
+        console.log(albumId)
         const res = await albumService.getAlbumById(albumId)  
         return res;
     } catch (err) {
@@ -142,8 +143,6 @@ export const albumSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
-            state.album = null;
-            state.isSuccess = false;
         })
         .addCase(getAlbumByName.pending, (state)=>{
             state.isLoading = true;

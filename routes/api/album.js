@@ -38,7 +38,6 @@ router.post('/',[auth,[
             res.status(201).json(album)
             
         } catch (err) {
-            console.error(err.message);
             res.status(500).send('Server error')
         }
     
@@ -53,7 +52,6 @@ router.get('/',auth,async(req,res)=>{
       const albums = await Album.find()
       res.json(albums)
     } catch (err) {
-      console.error(err.message);
       res.status(500).send('Server error')
     }
   });
@@ -67,7 +65,6 @@ router.get('/user',auth,async(req,res)=>{
     const albums = await Album.find({user : req.user.id})
     res.json(albums)
   } catch (err) {
-    console.error(err.message);
     res.status(500).send('Server error')
   }
 });
@@ -75,14 +72,12 @@ router.get('/user',auth,async(req,res)=>{
   //@route  GET api/albums/name
 //@desc   Get album by name 
 //@access Private
-router.get('/:name',auth,async(req,res)=>{
+router.get('/name/:name',auth,async(req,res)=>{
   try {
     let name = req.params.name;
-    console.log(name)
     const album = await Album.findOne({name: name})
     res.status(200).json({album:album});
   } catch (err) {
-    console.error(err.message);
       res.status(500).send('Server error')
   }
 })
@@ -90,7 +85,7 @@ router.get('/:name',auth,async(req,res)=>{
 //@route  GET api/albums/:id
 //@desc   Get albums by id
 //@access Private
-router.get('/:id',auth, async (req, res) => {
+router.get('/id/:id',auth, async (req, res) => {
     try {
       const album = await Album.findById(req.params.id)
       //.sort({ date: -1 });
@@ -101,7 +96,6 @@ router.get('/:id',auth, async (req, res) => {
     } catch (err) {
       if (err.kind==='ObjectId') 
         return res.status(404).send("Album not found");
-      console.error(err.message);
       res.status(500).send('Server error!!');
     
   }
@@ -128,7 +122,6 @@ router.delete('/:id', auth, async (req, res) => {
     } catch (err) {
       if (err.kind === 'ObjectId')
         return res.status(404).send("Album not found");
-      console.error(err.message);
       res.status(500).send('Server error');
     }
   });
@@ -138,10 +131,7 @@ router.delete('/:id', auth, async (req, res) => {
 //@access Private
 router.put('/',auth,async(req,res)=>{
   try {
-    let newAlbum = req.body.albumId;
-
-    console.log(newAlbum)
-    
+    let newAlbum = req.body.albumId;    
     const post = await Posts.findOne({_id: req.body.postId});
     
     if (!post) return res.status(400).json({ msg: "Post not found" })
@@ -153,7 +143,6 @@ router.put('/',auth,async(req,res)=>{
     post.album = newAlbum;
 
     newAlbum = await Album.findById(newAlbum)
-    console.log(newAlbum)
     await post.save();
     
     res.json(newAlbum)

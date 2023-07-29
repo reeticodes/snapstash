@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import {Link, useNavigate, useParams, useLocation} from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
 
 import {toast} from 'react-toastify'
@@ -33,11 +33,17 @@ const ExpandMore = styled((props) => {
 
 
 
-function PostIem() {
+function PostIem(props) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const location = useLocation();
+
+
+
   const {id} = useParams();
-  const postId = id;
+
+  // const profile = location.state.profile
+  const postId = location.state.postId
 
   const handleComment = () =>{
     const formData = {postId, text}
@@ -45,7 +51,7 @@ function PostIem() {
   }
 
   const {profile, isLoading : profileLoading} = useSelector((state)=>state.profile)
-  const {post, isLoading, isSuccess} = useSelector((state)=>state.post)
+  const { post,isLoading, isSuccess} = useSelector((state)=>state.post)
   const {album,albums, isLoading: albumLoading} = useSelector((state)=>state.album)
 
 
@@ -54,16 +60,12 @@ function PostIem() {
   
 
   useEffect(() => {
-    dispatch(getPostById(id))
-    dispatch(getCurrentProfile())
-    dispatch(getAlbumById(post.album))
+    dispatch(getPostById(location.state.postId))
+    dispatch(getAlbumById(location.state.albumId))
     dispatch(getUserAlbums())
     
-    
-    
-    if(isSuccess) toast.success('comment uploaded')
   
-  }, [getCurrentProfile,getAlbumById, getUserAlbums, getPostById, likePost, unlikePost])
+  }, [])
 
 
   const handleDelete = () =>{
@@ -72,18 +74,15 @@ function PostIem() {
   }
   const handleAlbumchange = (e) =>{
 
-    console.log(e.target.value)
     const newALbumId = (event.target.getAttribute('albumid'));
     const formData = {
       postId : id,
       albumId : newALbumId
     }
-    console.log(formData)
     dispatch(movePost(formData))
-    
   }
   return (
-    (isLoading || profileLoading||albumLoading || post===null || profile===null || album===null|| !album)  ? <Spinner/> :
+    (isLoading || profile===null || albumLoading || post===null ||album===null)  ? <Spinner/> :
     <Grid container spacing={2} sx={{
       display:'flex',
       alignItems:'center',

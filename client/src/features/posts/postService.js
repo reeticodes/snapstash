@@ -1,20 +1,20 @@
 import axios from 'axios'
 
+const SERVER_URL = "http://localhost:5000/api"
 
 const createPost = async(post) =>{
-   
     const config ={headers: { 'Content-Type' : 'multipart/form-data' }}
     const res = await axios.post('http://localhost:5000/api/posts',post,config);
     console.log(res.data)
     return res.data
 }
 const getAllPosts = async() => {
-    const res = await axios.get('http://localhost:5000/api/posts')
+    const res = await axios.get(`${SERVER_URL}/posts`)
     return res.data
 }
 
 const getPostById = async(postId) => {
-    const res = await axios.get(`http://localhost:5000/api/posts/${postId}`);
+    const res = await axios.get(`http://localhost:5000/api/posts/id/${postId}`);
     return res.data
 }
 const getUserPosts = async(userId) => {
@@ -23,6 +23,14 @@ const getUserPosts = async(userId) => {
 }
 const getAlbumPosts = async(albumId) => {
     const res = await axios.get(`http://localhost:5000/api/posts/album/${albumId}`);
+    return res.data
+}
+const searchPosts = async(tags) => {
+ 
+    const config ={headers: { 'Content-Type' : 'Application/json' }}
+    const body = JSON.stringify(tags)
+    const res = await axios.post(`http://localhost:5000/api/posts/search`,body,config);
+    console.log(res.data)
     return res.data
 }
 const deletePost = async(postId) => {
@@ -64,7 +72,8 @@ const authService = {
     deletePost,
     likePost,
     unlikePost,
-    commentPost
+    commentPost,
+    searchPosts
 }
 
 export default authService

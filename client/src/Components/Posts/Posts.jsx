@@ -47,7 +47,7 @@ function Posts() {
     }
 
 
-   }, [getCurrentProfile, getAllPosts,message, isError, loadUser])
+   }, [getCurrentProfile, getAllPosts,message, loadUser])
 
 
    return (

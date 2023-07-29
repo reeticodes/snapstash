@@ -18,8 +18,7 @@ function Album() {
     const {album,isLoading, isError} = useSelector((state)=>state.album)
     const {posts,isLoading : postLoading, isError : postError} = useSelector((state)=>state.post)
     const dispatch = useDispatch()
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
+
 
     useEffect(() => {
       dispatch(getAlbumById(id))
@@ -39,7 +38,7 @@ function Album() {
         {posts.map((post)=>
         
           <Grid item xs = {3} key = {post._id}>
-             <Link to={`/post/${post._id}`}>
+             <Link state={{postId : post._id, albumId : post.album}} to={`/post/${post._id}`}>
           <img style={{width:'200px'}} src={post.myfile}/>
           </Link>
           </Grid>

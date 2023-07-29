@@ -2,8 +2,8 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import postService from './postService'
 
 const initialState = {
-    posts: [],
     post:null,
+    posts: [],
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -12,6 +12,8 @@ const initialState = {
 //Create a post
 export const createPost = createAsyncThunk('post/create', async(post, thunkAPI)=>{
     try {
+        console.log('im creating')
+
         return await postService.createPost(post);
     } catch (err) {
         
@@ -56,6 +58,17 @@ export const getUserPosts = createAsyncThunk('/posts/user', async(userId,thunkAP
 export const getAlbumPosts = createAsyncThunk('/posts/album', async(albumId,thunkAPI)=>{
     try {
         const res = await postService.getAlbumPosts(albumId)
+        return res;
+    } catch (err) {
+        const message = err.response.data.errors
+        console.log(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+export const searchPosts = createAsyncThunk('/posts/search', async(tags,thunkAPI)=>{
+    try {
+        console.log('tring')
+        const res = await postService.searchPosts(tags)
         return res;
     } catch (err) {
         const message = err.response.data.errors
@@ -118,6 +131,7 @@ export const postSlice = createSlice({
     initialState,
     reducers:{
         reset: (state) =>{
+            state.posts = [],
             state.isError = false
             state.isLoading = false
             state.isSuccess = false
@@ -149,6 +163,20 @@ export const postSlice = createSlice({
             state.isLoading = false;
         })
         .addCase(getAllPosts.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload
+            state.posts = []
+        })
+
+        .addCase(searchPosts.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(searchPosts.fulfilled,(state,action)=>{
+            state.posts = action.payload,
+            state.isLoading = false;
+        })
+        .addCase(searchPosts.rejected, (state,action)=>{
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload

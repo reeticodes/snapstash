@@ -80,9 +80,7 @@ export default function Login() {
     dispatch(login(formData))
   };
 
-  if (isAuthenticated) {
-		navigate('/posts')
-	}
+
 
   return (
     <ThemeProvider theme={defaultTheme}>

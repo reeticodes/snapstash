@@ -70,7 +70,7 @@ function Post({isLoading,post, profile}) {
 				<span>👎</span>
 			</Button>
         
-        <Link to={`/post/${post._id}`}>
+        <Link state={{ postId : post._id, albumId : post.album}} to={`/post/${post._id}`}>
            <Button size = "small" >
            <span>💬</span>
 <span>{post.comments.length>0 && <span>{post.comments.length}</span> }</span>

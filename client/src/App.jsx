@@ -21,7 +21,7 @@ import Profile from './Components/Profile/Profile'
 import Homepage from './Components/Layout/Homepage'
 import Album from './Components/Albums/Album'
 import PostItem from './Components/Post/PostIem'
-
+import Search from './Components/Search/Search'
 
 
 function App() {
@@ -52,6 +52,7 @@ function App() {
             <Route path='/' element = {<Homepage/>}/>
 
             <Route element={<PrivateRoutes />}>
+              <Route path='/search' element = {<Search/>}/>
               <Route path='/posts' element={<Posts/>} />
               <Route path='/post/:id' element={<PostItem/>} />
               <Route path='/profile/:id' element = {<Profile/>}/>
