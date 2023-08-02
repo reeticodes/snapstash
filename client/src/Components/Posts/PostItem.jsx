@@ -1,11 +1,14 @@
 import {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
+import moment from 'moment'
+
 import {Card,Avatar,CardHeader, CardContent, CardActions, Typography, Button} from '@mui/material'
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {useDispatch, useSelector} from 'react-redux'
 
 import {likePost, unlikePost, commentPost} from '../../features/posts/postSlice'
+import {} from '../../features/profile/profileSlice'
 
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
@@ -41,15 +44,15 @@ function Post({isLoading,post, profile}) {
     <Card sx = {{maxWidth: '100%'}}>
       <CardHeader
         avatar={
-          <Avatar src={profile.avatar}/>
+          <Avatar src={post.avatar}/>
         }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
-        title={post.caption}
-        subheader={post.date}
+        title={post.name}
+        subheader={moment(post.date).format('DD/MM/YYYY')}
       />
     <img src={myfile}/>
     <CardContent>

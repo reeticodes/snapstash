@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {Link, useNavigate, useParams, useLocation} from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
-
+import moment from 'moment'
 import {toast} from 'react-toastify'
 import {getPostById, deletePost,likePost, unlikePost, commentPost} from '../../features/posts/postSlice'
 import {getCurrentProfile, getProfileById} from '../../features/profile/profileSlice'
@@ -95,7 +95,7 @@ function PostIem(props) {
     <Card sx={{ maxWidth:'100%', marginTop:'20px'}}>
       <CardHeader
         avatar={
-          <Avatar src={profile.avatar}>
+          <Avatar src={post.avatar}>
             R
           </Avatar>
         }
@@ -126,8 +126,8 @@ function PostIem(props) {
           </FormControl>
                   
         }
-        title={profile.name}
-        subheader=""
+        title={post.name}
+        subheader={moment(post.date).format('DD/MM/YYYY')}
       />
       <CardMedia
         component="img"

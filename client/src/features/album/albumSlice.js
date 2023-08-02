@@ -114,7 +114,6 @@ export const albumSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload
-            state.isSuccess = false;
         })
 
         .addCase(getAllAlbums.pending, (state)=>{
@@ -156,7 +155,6 @@ export const albumSlice = createSlice({
             state.isError = true;
             state.message = action.payload;
             state.album = null;
-            state.isSuccess = false;
         })
 
         .addCase(getUserAlbums.pending, (state)=>{
@@ -186,7 +184,6 @@ export const albumSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload
-            state.isSuccess = false;
         })
         .addCase(movePost.pending, (state)=>{
             state.isLoading = true
@@ -200,7 +197,6 @@ export const albumSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload
-            state.isSuccess = false;
         })
 
     }

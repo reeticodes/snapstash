@@ -18,12 +18,13 @@ import { useSelector, useDispatch} from 'react-redux/';
 import {useNavigate} from 'react-router-dom'
 
 export default function ButtonAppBar() {
-  const {user,isError,isAuthenticated, isLoading, isSuccess, message} = useSelector(
+  const {user,isError,isAuthenticated, isLoading, isSuccess, message, authToken} = useSelector(
     (state) => state.auth
   )
   const navigate = useNavigate()
   const dispatch = useDispatch()
   useEffect(() => {
+    
     if(isError){
       message.forEach(error => toast.error(error.msg));
     }
@@ -33,10 +34,12 @@ export default function ButtonAppBar() {
 
   const onClick =() =>{
     dispatch(logout())
+    navigate('/')
     dispatch(authReset())
     dispatch(profileReset())
-    navigate('/')
+    
   }
+
 
 
   const guestLinks = (

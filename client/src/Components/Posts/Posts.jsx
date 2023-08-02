@@ -38,20 +38,24 @@ function Posts() {
 
   useEffect(() => {
     dispatch(loadUser())
-    dispatch(getAllPosts())
     dispatch(getCurrentProfile())
+    dispatch(getAllPosts())
+    
 
     if(isError){
-      if(message)
-      message.forEach(error => toast.error(error.msg));
+      if(message){
+          message.forEach(error => toast.error(error.msg));
+      }
     }
 
+    if(isSuccess) console.log('success')
 
-   }, [getCurrentProfile, getAllPosts,message, loadUser])
+   }, [getCurrentProfile,isSuccess, getAllPosts,isError, loadUser])
 
+  
 
    return (
-    ( isLoading || profileLoading || posts===null || profile===null) ? <Spinner/> :
+    ( isLoading || profileLoading || posts===null) ? <Spinner/> :
     <div>
       <Container maxWidth="sm" style={{marginTop:'5%'}}>
         <Box>

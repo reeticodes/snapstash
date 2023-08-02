@@ -152,7 +152,6 @@ export const postSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload
-            state.isSuccess = false;
         })
 
         .addCase(getAllPosts.pending, (state)=>{
@@ -196,7 +195,6 @@ export const postSlice = createSlice({
             state.isError = true;
             state.message = action.payload;
             state.post = null;
-            state.isSuccess = false;
         })
 
         .addCase(getUserPosts.pending, (state)=>{
@@ -241,7 +239,6 @@ export const postSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload
-            state.isSuccess = false;
         })
 
         
@@ -257,7 +254,6 @@ export const postSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
-            state.isSuccess = false;
         })
         .addCase(unlikePost.pending, (state)=>{
             state.isLoading = true;
@@ -270,7 +266,6 @@ export const postSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
-            state.isSuccess = false;
         })
         .addCase(commentPost.pending, (state)=>{
             state.isLoading = true;
@@ -284,7 +279,6 @@ export const postSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
-            state.isSuccess = false;
         })
 
     }

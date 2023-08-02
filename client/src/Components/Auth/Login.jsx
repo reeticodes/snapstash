@@ -51,7 +51,7 @@ export default function Login() {
       message.forEach(error => toast.error(error.msg));
   
     }
-    if(isSuccess || user) {
+    if(isSuccess || user && authToken) {
       dispatch(loadUser())
        navigate('/posts')
     }

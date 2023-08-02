@@ -98,7 +98,6 @@ export const profileSlice = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload
-                state.isSuccess = false;
             })
 
             .addCase(getAllProfiles.pending, (state)=>{
@@ -119,6 +118,7 @@ export const profileSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(getCurrentProfile.fulfilled,(state,action)=>{
+                state.isSuccess= true
                 state.profile = action.payload,
                 state.isLoading = false;
             })
@@ -127,7 +127,6 @@ export const profileSlice = createSlice({
                 state.isError = true;
                 state.message = action.payload;
                 state.profile = null;
-                state.isSuccess = false;
             })
 
 

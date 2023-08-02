@@ -79,12 +79,10 @@ export const authSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(register.fulfilled, (state, action)=>{
-            state.isLoading = false;
             state.isSuccess = true;
             state.authToken = action.payload.token
         })
         .addCase(register.rejected, (state,action)=>{
-            state.isLoading = false;
             state.isError = true;
             state.authToken = null;
             state.message = action.payload
@@ -93,12 +91,10 @@ export const authSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(login.fulfilled, (state, action)=>{
-            state.isLoading = false;
-            state.isSuccess = true;
             state.authToken = action.payload.token
+            state.isSuccess = true
         })
         .addCase(login.rejected, (state,action)=>{
-            state.isLoading = false;
             state.isError = true;
             state.authToken = null;
             state.message = action.payload
@@ -107,29 +103,24 @@ export const authSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(logout.fulfilled, (state, action)=>{
-            state.isLoading = false;
-            state.isSuccess = true;
+            state.isSuccess = true
             state.user = null
             state.authToken = null
             state.isAuthenticated = false;
         })
         .addCase(logout.rejected, (state,action)=>{
-            state.isLoading = false;
             state.isError = true;
             state.message = action.payload
         })
         .addCase(loadUser.fulfilled, (state, action)=>{
-            state.isSuccess = true;
             state.user = action.payload;
             state.isAuthenticated = true;
-            state.isLoading = false;
             state.authToken = action.payload.token
         })
         .addCase(loadUser.pending, (state)=>{
             state.isLoading = true;
         })
         .addCase(loadUser.rejected, (state,action)=>{
-            state.isLoading = false;
             state.message = action.payload;
             state.user = null;
             state.isAuthenticated = false;

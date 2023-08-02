@@ -72,7 +72,14 @@ router.post('/',[
       user: req.user.id,
       album : albumId
     })
+    
     const post = await newPost.save();
+
+
+    console.log(post)
+    console.log(profile.name)
+    console.log(post.name)
+
     res.json(post)
   } catch (err) {
     console.error(err.message);
@@ -283,12 +290,15 @@ router.post('/comment/:id', [auth, [
   try {
     const post = await Posts.findById(req.params.id);
     const profile = await Profile.findOne(req.profile).populate('user');
+    const myprofile = await Profile.findOne({user : req.user.id})
+  
+    // console.log(myprofile[0])
     
-    console.log('what')
+    console.log(myprofile.name)
     const newComment = {
       text: req.body.text,
-      name: profile.name,
-      avatar: profile.avatar,
+      name: myprofile.name,
+      avatar: myprofile.avatar,
       user: req.user.id,
       profile : req.profile
     };

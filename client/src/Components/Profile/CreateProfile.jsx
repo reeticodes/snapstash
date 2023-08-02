@@ -8,7 +8,7 @@ import Spinner from '../Layout/Spinner'
 
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
-import {createProfile, reset} from '../../features/profile/profileSlice'
+import {createProfile,getCurrentProfile, reset} from '../../features/profile/profileSlice'
 import { loadUser } from '../../features/auth/authSlice';
 
 
@@ -22,7 +22,6 @@ export default function CreateProfile() {
     profile,
     isError,
     isLoading,
-    isAuthenticated,
     isSuccess,
     message
   } = useSelector((state) => state.profile)
@@ -36,15 +35,15 @@ export default function CreateProfile() {
   const [imageURL, setimageURL] = useState(profile===null? '': profile.avatar)
 
   useEffect(() => {
-
     dispatch(loadUser())
+    dispatch(getCurrentProfile())
 
     if(isError){
       if(message)
       message.forEach(error => toast.error(error.msg));
     }
     if(isSuccess) toast.success('Updated')
-  }, [ avatar, message,isAuthenticated, isError, isSuccess, navigate, dispatch])
+  }, [ getCurrentProfile,loadUser, message, isError, isSuccess])
   
   const handleFileUpload = async(e) =>{
     const file = e.target.files[0];
@@ -66,6 +65,7 @@ export default function CreateProfile() {
   };
 
   return (
+    (isLoading && profile===null? <Spinner/> :
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="sm">
         <CssBaseline />
@@ -140,6 +140,7 @@ export default function CreateProfile() {
         <ToastContainer/>
       </Container>
     </ThemeProvider>
+    )
   );
 }
 

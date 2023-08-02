@@ -10,6 +10,13 @@ const PostSchema = new mongoose.Schema({
     type : String,
     required: true
   },
+  name:{
+    type: String,
+    required : true
+  },
+  avatar: {
+    type: String
+  },
   keywords:[
     {
       type: String
@@ -50,7 +57,8 @@ const PostSchema = new mongoose.Schema({
         required: true
       },
       name: {
-        type: String
+        type: String,
+        required: true
       },
       avatar: {
         type: String
